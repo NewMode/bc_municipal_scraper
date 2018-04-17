@@ -37,14 +37,15 @@ function getLocalGovernments($content)
 	$lgs = [];
 	foreach($select_options as $option)
 	{
-		if(trim($option->getattribute("value")) == "")
-			continue;
 		$name = trim($option->plaintext);
-		$name_pattern = "/(.+?) \((.+?)\)/";
-		preg_match($name_pattern, $name, $match_name);
-		$place_name = $match_name[1];
-		$place_type = $match_name[2];
-		$lg = ["lgid" => $option->getattribute("value"), "place_name" => $place_name, "place_type" => $place_type];
+
+        if (strpos($name, '...'))
+            continue;
+
+     	$match_name = explode(' (', $name);
+		$place_name = trim($match_name[0]);
+		$place_type = str_replace(')', '', $match_name[1]);
+		$lg = ["lgid" => $option->value, "place_name" => $place_name, "place_type" => $place_type];
 		$lgs[] = $lg;
 	}
 	return $lgs;
